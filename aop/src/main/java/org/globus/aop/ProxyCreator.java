@@ -13,15 +13,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * This utility is used to create a proxy object based on the AOPInterceptors supplied.
+ * The typical usage of this class is to
+ * <ol>
+ * <li>Create an instance</li>
+ * <li>Register aspects</li>
+ * <li>call createProxy</li>
+ * </ol>
+ * @param <T> The type of the proxy to create.
+ * @author Tom Howe
+ */
 public class ProxyCreator<T> {
     Map<Method, Callback> perMethod = new HashMap<Method, Callback>();
     List<Aspect> interceptors = new ArrayList<Aspect>();
 
+    /**
+     * Register a new Aspect.  This requires that you provide a filter (to determine which method the aspect should
+     * apply to) and the actual Interceptor.
+     *
+     * @param filter Filter specifying which methods should apply
+     * @param interceptor Interceptor to wrap the original object
+     */
     public void registerInterceptor(MethodFilter filter, AOPInterceptor interceptor) {
         this.interceptors.add(new Aspect(filter, interceptor));
     }
 
+    /**
+     * Generate the proxy based on the registered aspects
+     *
+     * @param target The object to proxy
+     * @return The proxy
+     */
     public T createProxy(T target) {
         Method[] methods = target.getClass().getDeclaredMethods();
         for (Method method : methods) {
