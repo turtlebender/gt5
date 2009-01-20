@@ -1,4 +1,4 @@
-package org.globus.wsrf.impl.resources;
+package org.globus.aop;
 
 import java.lang.reflect.Method;
 

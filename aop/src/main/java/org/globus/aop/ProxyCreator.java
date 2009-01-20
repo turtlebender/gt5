@@ -1,4 +1,4 @@
-package org.globus.wsrf.impl.resources;
+package org.globus.aop;
 
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.CallbackFilter;
@@ -23,7 +23,7 @@ public class ProxyCreator<T> {
     }
 
     public T createProxy(T target) {
-        Method[] methods = target.getClass().getMethods();
+        Method[] methods = target.getClass().getDeclaredMethods();
         for (Method method : methods) {
             Advice advice = new Advice(target);
             boolean advised = false;
@@ -38,19 +38,27 @@ public class ProxyCreator<T> {
             }
             perMethod.put(method, advice);
         }
-        Callback[] callbacks = new Callback[perMethod.size()];
+        Callback[] callbacks = new Callback[perMethod.size() + 1];
+        callbacks[0] = NoOp.INSTANCE;
         final Map<Method, Integer> callbackMap = new HashMap<Method, Integer>();
-        int counter = 0;
+        int counter = 1;
         for (Map.Entry<Method, Callback> entry : perMethod.entrySet()) {
             callbacks[counter] = entry.getValue();
             callbackMap.put(entry.getKey(), counter);
+            counter++;
         }
         CallbackFilter cbf = new CallbackFilter() {
-            public int accept(Method method) {
-                return callbackMap.get(method);
+            public int accept(Method method) {                
+               Integer callbackId = callbackMap.get(method);
+                if(callbackId == null){
+                    return 0;
+                }
+                return callbackId.intValue();
+
             }
         };
         Enhancer enhancer = new Enhancer();
+        enhancer.setCallback(NoOp.INSTANCE);                
         enhancer.setSuperclass(target.getClass());
         enhancer.setCallbacks(callbacks);
         enhancer.setCallbackFilter(cbf);
