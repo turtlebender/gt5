@@ -1,6 +1,6 @@
 package org.globus.dispatch;
 
-import org.globus.dispatch.binding.SoapActionBinder;
+import org.globus.dispatch.binding.ActionBinder;
 import org.globus.dispatch.providers.ServiceProvider;
 import org.globus.dispatch.utils.Converter;
 import static org.globus.dispatch.utils.Converter.*;
@@ -39,15 +39,15 @@ public class SOAPDispatchProvider implements Provider<DOMSource> {
     private Logger log = LoggerFactory.getLogger(getClass());
     TransformerFactory transFac = TransformerFactory.newInstance();
     Converter converter = new Converter();
-    SoapActionBinder binder;
+    ActionBinder binder;
     SOAPFactory soapfac;
 
 
-    public SoapActionBinder getBinder() {
+    public ActionBinder getBinder() {
         return binder;
     }
 
-    public void setBinder(SoapActionBinder binder) {
+    public void setBinder(ActionBinder binder) {
         this.binder = binder;
     }
 
@@ -119,7 +119,7 @@ public class SOAPDispatchProvider implements Provider<DOMSource> {
         detail.setValue(writer.toString());
         return fault;
     }
-    
+
     private SOAPFactory getSOAPFactory() throws SOAPException {
         if (soapfac == null) {
             soapfac = SOAPFactory.newInstance();
