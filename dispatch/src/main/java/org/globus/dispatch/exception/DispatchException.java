@@ -1,4 +1,4 @@
-package org.globus.dispatch;
+package org.globus.dispatch.exception;
 
 /**
  * Created by IntelliJ IDEA.

@@ -1,6 +1,6 @@
 package org.globus.dispatch.binding;
 
-import org.globus.dispatch.OperationHandler;
+import org.globus.dispatch.binding.OperationHandler;
 
 import javax.xml.ws.handler.MessageContext;
 

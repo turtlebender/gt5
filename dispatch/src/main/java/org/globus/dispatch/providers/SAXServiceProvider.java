@@ -1,6 +1,6 @@
 package org.globus.dispatch.providers;
 
-import org.globus.dispatch.DispatchException;
+import org.globus.dispatch.exception.DispatchException;
 import static org.globus.dispatch.utils.Converter.toSAXSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

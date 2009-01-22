@@ -1,4 +1,4 @@
-package org.globus.dispatch;
+package org.globus.dispatch.binding;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,14 +42,14 @@ public class OperationHandler implements SOAPHandler<SOAPMessageContext> {
                     String actionString = action.getValue();
                     soapMessageContext.put(ACTION_KEY, actionString);
                     soapMessageContext.setScope(ACTION_KEY, MessageContext.Scope.APPLICATION);
-                    System.out.println("actionName = " + actionString);
+                    logger.debug("actionName = {}", actionString);
                 }
             } catch (Exception e) {
                 logger.warn("Unable to acquire addressing action.", e);
                 return false;
             }
         }
-        return true;  //To change body of implemented methods use File | Settings | File Templates.
+        return true;
     }
 
     public boolean handleFault(SOAPMessageContext soapMessageContext) {
