@@ -1,6 +1,6 @@
 package org.globus.dispatch.providers;
 
-import org.globus.dispatch.DispatchException;
+import org.globus.dispatch.exception.DispatchException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

@@ -4,6 +4,7 @@ import org.globus.dispatch.binding.ActionBinder;
 import org.globus.dispatch.providers.ServiceProvider;
 import org.globus.dispatch.utils.Converter;
 import static org.globus.dispatch.utils.Converter.*;
+import org.globus.dispatch.exception.DispatchException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;

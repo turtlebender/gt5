@@ -1,6 +1,6 @@
 package org.globus.dispatch.providers;
 
-import org.globus.dispatch.DispatchException;
+import org.globus.dispatch.exception.DispatchException;
 import org.globus.dispatch.binding.DispatchBinding;
 import org.xml.sax.InputSource;
 
