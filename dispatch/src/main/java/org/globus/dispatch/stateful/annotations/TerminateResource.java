@@ -1,4 +1,4 @@
-package org.globus.dispatch.stateful.annotations;
+package org.globus.wsrf.annotations;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -7,5 +7,5 @@ import java.lang.annotation.ElementType;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface CreateResource {
+public @interface TerminateResource{
 }
