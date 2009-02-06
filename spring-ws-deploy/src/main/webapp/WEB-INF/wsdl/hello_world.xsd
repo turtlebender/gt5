@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    W3C XML Schema defined in the Web Services Addressing 1.0 specification
+    http://www.w3.org/TR/ws-addr-core
+
+   Copyright © 2005 World Wide Web Consortium,
+
+   (Massachusetts Institute of Technology, European Research Consortium for
+   Informatics and Mathematics, Keio University). All Rights Reserved. This
+   work is distributed under the W3C® Software License [1] in the hope that
+   it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+   warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+   [1] http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231
+
+   $Id: ws-addr.xsd,v 1.4 2008/07/14 18:48:47 plehegar Exp $
+-->
+<xs:schema targetNamespace="http://apache.org/hello_world_soap_http/types"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://apache.org/hello_world_soap_http/types"
+           xmlns:wsa="http://www.w3.org/2005/08/addressing"
+           elementFormDefault="qualified">
+
+    <xs:import namespace="http://www.w3.org/2005/08/addressing"
+               schemaLocation="http://www.w3.org/2005/08/addressing/ws-addr.xsd"/>
+    <xs:simpleType name="MyStringType">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="30"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="createGreeterRequest">
+        <xs:complexType/>
+    </xs:element>
+
+    <xs:element name="createGreeterResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="wsa:EndpointReference"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="greetMe">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="requestType" type="tns:MyStringType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="greetMeResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="responseType" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="faultDetail">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="minor" type="xs:short"/>
+                <xs:element name="major" type="xs:short"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

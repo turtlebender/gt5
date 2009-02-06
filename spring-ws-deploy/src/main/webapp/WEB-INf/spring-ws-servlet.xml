@@ -1,0 +1,31 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+              http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+
+    <bean id="messageReceiver" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+        <property name="endpointAdapters" ref="endpointAdapter"/>
+        <property name="endpointMappings" ref="getpp"/>
+    </bean>
+
+    <bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="contextPath" value="org.oasis.wsrf.resourceproperties:org.globus.wsrf.counter"/>
+    </bean>
+
+    <bean id="endpointAdapter" class="org.globus.wsrf.ResourcefulMethodEndpointAdapter">
+        <property name="marshaller" ref="marshaller"/>
+        <property name="unmarshaller" ref="marshaller"/>
+    </bean>
+
+    <bean id="starterCounter" class="org.globus.wsrf.test.CounterResource"/>
+
+    <bean id="getpp" class="org.globus.wsrf.ResourceEndpointMapping">
+        <property name="address" value="http://localhost:8080/CounterService"/>
+        <property name="messageSenders">
+            <bean class="org.springframework.ws.transport.http.HttpUrlConnectionMessageSender"/>
+        </property>
+    </bean>
+
+
+</beans>
