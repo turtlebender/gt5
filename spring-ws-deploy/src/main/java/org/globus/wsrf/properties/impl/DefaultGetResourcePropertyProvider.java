@@ -20,6 +20,7 @@ public class DefaultGetResourcePropertyProvider implements GetResourcePropertyPr
         this.propSet = propSet;
     }
 
+    @SuppressWarnings("unchecked")
     @AddressingAction("http://docs.open-oasis.org/wsrf/rpw-2/GetResourceProperty/GetResourcePropertyRequest")
     public GetResourcePropertyResponse invokeInternal(@Resourceful Object id, JAXBElement<QName> resourceProperty)
             throws Exception {

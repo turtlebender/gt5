@@ -4,7 +4,7 @@
 
     <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
 
-    <bean id="messageReceiver" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+    <bean id="messageReceiver" class="org.springframework.ws.soap.server.SoapMessageDispatcher">        
         <property name="endpointAdapters" ref="endpointAdapter"/>
         <property name="endpointMappings" ref="getpp"/>
     </bean>
@@ -13,7 +13,7 @@
         <property name="contextPath" value="org.oasis.wsrf.resourceproperties:org.globus.wsrf.counter"/>
     </bean>
 
-    <bean id="endpointAdapter" class="org.globus.wsrf.ResourcefulMethodEndpointAdapter">
+    <bean id="endpointAdapter" class="org.globus.wsrf.ResourcefulEndpointFactory">        
         <property name="marshaller" ref="marshaller"/>
         <property name="unmarshaller" ref="marshaller"/>
     </bean>

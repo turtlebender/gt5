@@ -19,7 +19,6 @@ public class ResourceEndpointMapping extends AbstractActionEndpointMapping imple
     private URI address;
 
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-
         return bean;
     }
 
@@ -44,8 +43,10 @@ public class ResourceEndpointMapping extends AbstractActionEndpointMapping imple
         }
     }
 
+    @SuppressWarnings("unchecked")
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (AopUtils.getTargetClass(bean).getAnnotation(StatefulResource.class) != null) {
+        Class targetClass = AopUtils.getTargetClass(bean);
+        if (targetClass.getAnnotation(StatefulResource.class) != null) {
             try {
                 registerMethods(bean);
             } catch (Exception e) {
