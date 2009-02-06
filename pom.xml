@@ -16,7 +16,8 @@
     </distributionManagement>
 
     <modules>
-        <module>spring-ws-deploy</module>
+	<module>dispatch</module>
+        <module>spring-ws</module>
     </modules>
 
     <build>
