@@ -1,6 +1,6 @@
 package org.globus.resourceful.springws;
 
-import org.globus.wsrf.properties.ResourceDelegateFactory;
+import org.globus.wsrf.ResourceDelegateFactory;
 import org.globus.wsrf.BeanProcessor;
 import org.globus.wsrf.ProcessedResource;
 import org.globus.wsrf.WebMethodInvoker;

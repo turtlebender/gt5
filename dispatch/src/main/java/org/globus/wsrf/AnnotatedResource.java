@@ -1,4 +1,4 @@
-package org.globus.wsrf.properties.impl;
+package org.globus.wsrf;
 
 import org.globus.wsrf.annotations.StatefulResource;
 import org.globus.wsrf.properties.Resource;

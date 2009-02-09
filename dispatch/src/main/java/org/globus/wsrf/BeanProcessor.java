@@ -4,12 +4,10 @@ import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import org.globus.wsrf.annotations.StatefulResource;
+import org.globus.wsrf.lifetime.impl.AnnotatedDestroyableFactory;
+import org.globus.wsrf.lifetime.impl.AnnotatedFutureDestroyableFactory;
 import org.globus.wsrf.properties.Resource;
-import org.globus.wsrf.properties.ResourceDelegateFactory;
-import org.globus.wsrf.properties.impl.AnnotatedResource;
-import org.globus.wsrf.properties.impl.DefaultGetRPProviderFactory;
-import org.globus.wsrf.lifetime.impl.DefaultFutureDestroyableProviderFactory;
-import org.globus.wsrf.lifetime.impl.DefaultDestroyProviderFactory;
+import org.globus.wsrf.properties.impl.AnnotatedGetRPFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -95,9 +93,9 @@ public class BeanProcessor {
     }
 
     private void addDefaultDelegateFactories(List<ResourceDelegateFactory> delegateFactories) {
-        delegateFactories.add(new DefaultGetRPProviderFactory());
-        delegateFactories.add(new DefaultFutureDestroyableProviderFactory());
-        delegateFactories.add(new DefaultDestroyProviderFactory());
+        delegateFactories.add(new AnnotatedGetRPFactory());
+        delegateFactories.add(new AnnotatedFutureDestroyableFactory());
+        delegateFactories.add(new AnnotatedDestroyableFactory());
     }
 
 }

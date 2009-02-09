@@ -1,14 +1,12 @@
 package org.globus.wsrf.lifetime;
 
-import java.util.Calendar;
+import org.globus.wsrf.annotations.AddressingAction;
+import org.globus.wsrf.Resourceful;
+import org.oasis.wsrf.lifetime.SetTerminationTime;
+import org.oasis.wsrf.lifetime.SetTerminationTimeResponse;
 
-/**
- * Created by IntelliJ IDEA.
- * User: turtlebender
- * Date: Feb 6, 2009
- * Time: 8:45:32 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public interface FutureDestroyable {
-    public void setTerminationTime(Calendar cal);
+    @AddressingAction("http://docs.oasis-open.org/wsrf/rlw-2/ScheduledResourceTermination/SetTerminationTimeRequest")
+    public SetTerminationTimeResponse setTerminationTime(@Resourceful Object resourceKey, SetTerminationTime time) throws Exception;
 }

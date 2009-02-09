@@ -2,7 +2,7 @@ package org.globus.wsrf.properties.impl;
 
 import org.globus.wsrf.annotations.AddressingAction;
 import org.globus.wsrf.Resourceful;
-import org.globus.wsrf.properties.ResourcePropertySet;
+import org.globus.wsrf.properties.GetResourcePropertyProvider;
 import org.oasis.wsrf.resourceproperties.GetMultipleResourceProperties;
 import org.oasis.wsrf.resourceproperties.GetMultipleResourcePropertiesResponse;
 
@@ -10,13 +10,13 @@ import javax.xml.namespace.QName;
 import java.util.List;
 
 public class GetMultipleResourcePropertyProvider {
-    private ResourcePropertySet propSet;
+    private GetResourcePropertyProvider propSet;
 
-    public ResourcePropertySet getPropSet() {
+    public GetResourcePropertyProvider getPropSet() {
         return propSet;
     }
 
-    public void setPropSet(ResourcePropertySet propSet) {
+    public void setPropSet(GetResourcePropertyProvider propSet) {
         this.propSet = propSet;
     }
 

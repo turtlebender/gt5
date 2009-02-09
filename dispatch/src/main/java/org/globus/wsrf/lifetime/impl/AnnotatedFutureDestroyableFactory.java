@@ -1,13 +1,13 @@
 package org.globus.wsrf.lifetime.impl;
 
-import org.globus.wsrf.properties.ResourceDelegateFactory;
 import org.globus.wsrf.annotations.TerminateResource;
-import org.globus.wsrf.lifetime.SetTerminationTimeProvider;
+import org.globus.wsrf.lifetime.FutureDestroyable;
+import org.globus.wsrf.ResourceDelegateFactory;
 
 import java.lang.reflect.Method;
 
 
-public class DefaultFutureDestroyableProviderFactory implements ResourceDelegateFactory<SetTerminationTimeProvider> {
+public class AnnotatedFutureDestroyableFactory implements ResourceDelegateFactory<FutureDestroyable> {
     public boolean supports(Object o) {
         for (Method method : o.getClass().getMethods()) {
             TerminateResource tr = method.getAnnotation(TerminateResource.class);
@@ -18,13 +18,13 @@ public class DefaultFutureDestroyableProviderFactory implements ResourceDelegate
         return false;
     }
 
-    public SetTerminationTimeProvider getDelegate(Object o) {
+    public FutureDestroyable getDelegate(Object o) {
         AnnotatedFutureDestroyable destroy = new AnnotatedFutureDestroyable(o);
         destroy.init();
-        return new DefaultSetTerminationTimeProvider(destroy);
+        return destroy;
     }
 
-    public Class<SetTerminationTimeProvider> getInterface() {
-        return SetTerminationTimeProvider.class;
+    public Class<FutureDestroyable> getInterface() {
+        return FutureDestroyable.class;
     }
 }

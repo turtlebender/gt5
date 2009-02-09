@@ -12,6 +12,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
 public class WebMethodInvoker {
 
@@ -48,18 +49,26 @@ public class WebMethodInvoker {
         Method method = methodEndpoint.getMethod();
         int numParams = method.getParameterTypes().length;
         Object[] params = new Object[numParams];
-        int resourceIndex = getResourcefulIndex(method);
-        switch (resourceIndex) {
-            case 0:
+        if (params.length > 1) {
+            int resourceIndex = getResourcefulIndex(method);
+            switch (resourceIndex) {
+                case 0:
+                    params[0] = getResourceKey(headerSource);
+                    params[1] = requestObject;
+                    break;
+                case 1:
+                    params[0] = requestObject;
+                    params[1] = getResourceKey(headerSource);
+                    break;
+
+            }
+        } else if (params.length == 1) {
+            int resourceIndex = getResourcefulIndex(method);
+            if (resourceIndex == 0) {
                 params[0] = getResourceKey(headerSource);
-                params[1] = requestObject;
-                break;
-            case 1:
+            } else {
                 params[0] = requestObject;
-                params[1] = getResourceKey(headerSource);
-                break;
-            default:
-                params[0] = requestObject;
+            }
         }
         return methodEndpoint.invoke(params);
     }
@@ -85,17 +94,19 @@ public class WebMethodInvoker {
         return key;
     }
 
-    public boolean supports(MethodEndpoint methodEndpoint){
+    public boolean supports(MethodEndpoint methodEndpoint) {
         Method method = methodEndpoint.getMethod();
         return supportsReturnType(method) && supportsParameters(method);
     }
 
-private boolean supportsReturnType(Method method) {
+    private boolean supportsReturnType(Method method) {
         if (Void.TYPE.equals(method.getReturnType())) {
             return true;
         } else {
             if (getMarshaller() instanceof GenericMarshaller) {
-                return ((GenericMarshaller) getMarshaller()).supports(method.getGenericReturnType());
+                GenericMarshaller marshaller = (GenericMarshaller) getMarshaller();
+                Type type = method.getGenericReturnType();
+                return marshaller.supports(type);
             } else {
                 return getMarshaller().supports(method.getReturnType());
             }

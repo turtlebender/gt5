@@ -1,12 +1,12 @@
 package org.globus.wsrf.properties.impl;
 
 import org.globus.wsrf.annotations.GetResourceProperty;
+import org.globus.wsrf.ResourceDelegateFactory;
 import org.globus.wsrf.properties.GetResourcePropertyProvider;
-import org.globus.wsrf.properties.ResourceDelegateFactory;
 
 import java.lang.reflect.Method;
 
-public class DefaultGetRPProviderFactory implements ResourceDelegateFactory<GetResourcePropertyProvider> {
+public class AnnotatedGetRPFactory implements ResourceDelegateFactory<GetResourcePropertyProvider> {
 
     public boolean supports(Object o) {
         for (Method method : o.getClass().getMethods()) {
@@ -18,15 +18,12 @@ public class DefaultGetRPProviderFactory implements ResourceDelegateFactory<GetR
     }
 
     public GetResourcePropertyProvider getDelegate(Object o) {
-        DefaultGetResourcePropertyProvider provider = new DefaultGetResourcePropertyProvider();
-        AnnotatedResourcePropertySet propSet = new AnnotatedResourcePropertySet();
-        propSet.setResource(o);
+        AnnotatedGetResourcePropertyProvider provider = new AnnotatedGetResourcePropertyProvider(o);
         try {
-            propSet.afterPropertiesSet();
+            provider.afterPropertiesSet();
         } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            throw new IllegalArgumentException("Unable to configure ResourceProperties");
         }
-        provider.setPropSet(propSet);
         return provider;
     }
 

@@ -1,4 +1,4 @@
-package org.globus.wsrf.properties;
+package org.globus.wsrf;
 
 /**
  * Created by IntelliJ IDEA.

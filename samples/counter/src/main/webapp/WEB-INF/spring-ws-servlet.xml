@@ -10,7 +10,7 @@
     </bean>
 
     <bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-        <property name="contextPath" value="org.oasis.wsrf.resourceproperties:org.globus.wsrf.counter"/>
+        <property name="contextPath" value="org.oasis.wsrf.resourceproperties:org.oasis.wsrf.lifetime:org.globus.wsrf.counter"/>
     </bean>
 
     <bean id="endpointAdapter" class="org.globus.resourceful.springws.ResourcefulEndpointFactory">
