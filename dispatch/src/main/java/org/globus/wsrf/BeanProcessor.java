@@ -7,7 +7,9 @@ import org.globus.wsrf.annotations.StatefulResource;
 import org.globus.wsrf.properties.Resource;
 import org.globus.wsrf.properties.ResourceDelegateFactory;
 import org.globus.wsrf.properties.impl.AnnotatedResource;
-import org.springframework.beans.factory.InitializingBean;
+import org.globus.wsrf.properties.impl.DefaultGetRPProviderFactory;
+import org.globus.wsrf.lifetime.impl.DefaultFutureDestroyableProviderFactory;
+import org.globus.wsrf.lifetime.impl.DefaultDestroyProviderFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -16,13 +18,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class BeanProcessor implements InitializingBean {
+public class BeanProcessor {
     private List<ResourceDelegateFactory> delegateFactories;
     private Set<Class> delegateInterfaces = new HashSet<Class>();
-
-    public void afterPropertiesSet() throws Exception {
-
-    }
 
     public List<ResourceDelegateFactory> getDelegateFactories() {
         return delegateFactories;
@@ -98,6 +96,8 @@ public class BeanProcessor implements InitializingBean {
 
     private void addDefaultDelegateFactories(List<ResourceDelegateFactory> delegateFactories) {
         delegateFactories.add(new DefaultGetRPProviderFactory());
+        delegateFactories.add(new DefaultFutureDestroyableProviderFactory());
+        delegateFactories.add(new DefaultDestroyProviderFactory());
     }
 
 }

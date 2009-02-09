@@ -1,4 +1,4 @@
-package org.globus.wsrf;
+package org.globus.resourceful.springws;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +8,7 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.support.MarshallingUtils;
+import org.globus.wsrf.WebMethodInvoker;
 
 import javax.xml.transform.Source;
 import java.io.IOException;

@@ -1,8 +1,6 @@
-package org.globus.wsrf;
+package org.globus.wsrf.properties.impl;
 
 import org.globus.wsrf.annotations.GetResourceProperty;
-import org.globus.wsrf.properties.impl.AnnotatedResourcePropertySet;
-import org.globus.wsrf.properties.impl.DefaultGetResourcePropertyProvider;
 import org.globus.wsrf.properties.GetResourcePropertyProvider;
 import org.globus.wsrf.properties.ResourceDelegateFactory;
 

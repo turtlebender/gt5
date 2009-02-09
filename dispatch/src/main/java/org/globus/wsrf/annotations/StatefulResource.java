@@ -12,4 +12,6 @@ import java.lang.annotation.Inherited;
 public @interface StatefulResource {
     String keyNamespace();
     String keyLocalpart();
+    String resourceNamespace();
+    String resourceLocalpart();
 }

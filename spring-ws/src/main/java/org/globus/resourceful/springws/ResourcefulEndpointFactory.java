@@ -1,6 +1,9 @@
-package org.globus.wsrf;
+package org.globus.resourceful.springws;
 
 import org.globus.wsrf.properties.ResourceDelegateFactory;
+import org.globus.wsrf.BeanProcessor;
+import org.globus.wsrf.ProcessedResource;
+import org.globus.wsrf.WebMethodInvoker;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.FactoryBean;
@@ -39,13 +42,6 @@ public class ResourcefulEndpointFactory implements FactoryBean, BeanPostProcesso
 
 
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        if(resourcePopulated)
-            return bean;
-        try {
-            processor.afterPropertiesSet();
-        } catch (Exception e) {
-            throw new FatalBeanException("Unable to initialize BeanProcessor", e);
-        }
         if(resourcePopulated){
             return bean;
         }

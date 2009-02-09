@@ -13,7 +13,7 @@ import javax.xml.transform.dom.DOMSource;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-class WebMethodInvoker {
+public class WebMethodInvoker {
 
     private XPathEvaluator xpression;
     private Unmarshaller unmarshaller;

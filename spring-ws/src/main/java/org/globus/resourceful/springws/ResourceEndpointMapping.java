@@ -1,4 +1,4 @@
-package org.globus.wsrf;
+package org.globus.resourceful.springws;
 
 import org.globus.wsrf.annotations.AddressingAction;
 import org.globus.wsrf.annotations.StatefulResource;

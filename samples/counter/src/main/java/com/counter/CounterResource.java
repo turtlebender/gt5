@@ -1,4 +1,4 @@
-package org.globus.wsrf.test;
+package com.counter;
 
 import org.globus.wsrf.Resourceful;
 import org.globus.wsrf.annotations.GetResourceProperty;
@@ -10,12 +10,13 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-@StatefulResource(keyNamespace = "http://counter.com/CounterService", keyLocalpart = "CounterId")
-public class CounterResource implements InitializingBean{
+@StatefulResource(keyNamespace = "http://counter.com/CounterService", keyLocalpart = "CounterId",
+        resourceNamespace = "http://counter.com/CounterService", resourceLocalpart = "Counter")
+public class CounterResource implements InitializingBean {
     private Map<String, BigInteger> counterMap;
 
     public void afterPropertiesSet() throws Exception {
-        if(counterMap == null){
+        if (counterMap == null) {
             counterMap = new HashMap<String, BigInteger>();
         }
         counterMap.put("Moo", BigInteger.valueOf(10));
@@ -34,8 +35,8 @@ public class CounterResource implements InitializingBean{
         return counterMap.get(counterId);
     }
 
-    @TerminateResource
-    public void destroyResource(@Resourceful String counterId){
+    @TerminateResource(immediate = true)
+    public void destroyResource(@Resourceful String counterId) {
         counterMap.remove(counterId);
     }
 }

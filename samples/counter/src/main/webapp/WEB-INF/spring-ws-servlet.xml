@@ -13,14 +13,14 @@
         <property name="contextPath" value="org.oasis.wsrf.resourceproperties:org.globus.wsrf.counter"/>
     </bean>
 
-    <bean id="endpointAdapter" class="org.globus.wsrf.ResourcefulEndpointFactory">        
+    <bean id="endpointAdapter" class="org.globus.resourceful.springws.ResourcefulEndpointFactory">
         <property name="marshaller" ref="marshaller"/>
         <property name="unmarshaller" ref="marshaller"/>
     </bean>
 
-    <bean id="starterCounter" class="org.globus.wsrf.test.CounterResource"/>
+    <bean id="starterCounter" class="com.counter.CounterResource"/>
 
-    <bean id="getpp" class="org.globus.wsrf.ResourceEndpointMapping">
+    <bean id="getpp" class="org.globus.resourceful.springws.ResourceEndpointMapping">
         <property name="address" value="http://localhost:8080/CounterService"/>
         <property name="messageSenders">
             <bean class="org.springframework.ws.transport.http.HttpUrlConnectionMessageSender"/>
