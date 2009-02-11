@@ -16,4 +16,8 @@
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
+    <xsd:element name="CreateCounterRequest">
+        <xsd:complexType/>
+    </xsd:element>
+    
 </xsd:schema>

@@ -4,6 +4,7 @@ import org.globus.wsrf.BeanProcessor;
 import org.globus.wsrf.ProcessedResource;
 import org.globus.wsrf.ResourceDelegateFactory;
 import org.globus.wsrf.WebMethodInvoker;
+import org.globus.common.MethodInvocationInterceptor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.FactoryBean;
@@ -23,6 +24,15 @@ public class ResourcefulEndpointFactory implements FactoryBean, BeanPostProcesso
     private Marshaller marshaller;
     private Unmarshaller unmarshaller;
     private BeanProcessor processor = new BeanProcessor();
+    private List<MethodInvocationInterceptor> beforeInterceptors;
+
+    public List<MethodInvocationInterceptor> getBeforeInterceptors() {
+        return beforeInterceptors;
+    }
+
+    public void setBeforeInterceptors(List<MethodInvocationInterceptor> beforeInterceptors) {
+        this.beforeInterceptors = beforeInterceptors;
+    }
 
     public void setDelegateFactories(List<ResourceDelegateFactory> delegateFactories) {
         this.processor.setDelegateFactories(delegateFactories);
@@ -87,6 +97,7 @@ public class ResourcefulEndpointFactory implements FactoryBean, BeanPostProcesso
             invoker.setUnmarshaller(this.unmarshaller);
             invoker.setMarshaller(this.marshaller);
             invoker.setXpression(resource.getEvaluator());
+            invoker.setInterceptors(this.beforeInterceptors);
             adapter.setInvoker(invoker);
             adapter.setMarshaller(this.marshaller);
             adapter.setUnmarshaller(this.unmarshaller);

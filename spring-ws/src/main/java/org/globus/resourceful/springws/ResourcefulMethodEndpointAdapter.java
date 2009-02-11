@@ -31,7 +31,8 @@ public class ResourcefulMethodEndpointAdapter extends GenericMarshallingMethodEn
             SoapMessage request = (SoapMessage) messageContext.getRequest();
             Object requestObject = unmarshalRequest(request);
             Source headerSource = request.getSoapHeader().getSource();
-            Object responseObject = invoker.invoke(methodEndpoint, requestObject, headerSource);
+            Object responseObject = invoker.invoke(methodEndpoint, requestObject, headerSource,
+                    new SpringWSPropertyHolder(messageContext));
             if (responseObject != null) {
                 WebServiceMessage response = messageContext.getResponse();
                 marshalResponse(responseObject, response);

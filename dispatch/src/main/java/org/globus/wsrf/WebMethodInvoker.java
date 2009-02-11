@@ -1,5 +1,7 @@
 package org.globus.wsrf;
 
+import org.globus.common.MethodInvocationInterceptor;
+import org.globus.common.PropertyHolder;
 import org.springframework.oxm.GenericMarshaller;
 import org.springframework.oxm.GenericUnmarshaller;
 import org.springframework.oxm.Marshaller;
@@ -13,13 +15,23 @@ import javax.xml.transform.dom.DOMSource;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.List;
 
 public class WebMethodInvoker {
 
     private XPathEvaluator xpression;
     private Unmarshaller unmarshaller;
     private Marshaller marshaller;
+    private List<MethodInvocationInterceptor> interceptors;
 
+
+    public List<MethodInvocationInterceptor> getInterceptors() {
+        return interceptors;
+    }
+
+    public void setInterceptors(List<MethodInvocationInterceptor> interceptors) {
+        this.interceptors = interceptors;
+    }
 
     public Marshaller getMarshaller() {
         return marshaller;
@@ -45,7 +57,8 @@ public class WebMethodInvoker {
         this.xpression = xpression;
     }
 
-    public Object invoke(MethodEndpoint methodEndpoint, Object requestObject, Source headerSource) throws Exception {
+    public Object invoke(MethodEndpoint methodEndpoint, Object requestObject, Source headerSource,
+                         PropertyHolder holder) throws Exception {
         Method method = methodEndpoint.getMethod();
         int numParams = method.getParameterTypes().length;
         Object[] params = new Object[numParams];
@@ -69,6 +82,9 @@ public class WebMethodInvoker {
             } else {
                 params[0] = requestObject;
             }
+        }
+        for (MethodInvocationInterceptor interceptor : this.interceptors) {
+            interceptor.intercept(holder, method, params);
         }
         return methodEndpoint.invoke(params);
     }

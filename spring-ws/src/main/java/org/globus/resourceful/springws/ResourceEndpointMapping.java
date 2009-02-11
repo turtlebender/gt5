@@ -1,6 +1,7 @@
 package org.globus.resourceful.springws;
 
 import org.globus.wsrf.annotations.AddressingAction;
+import org.globus.wsrf.annotations.CreateResource;
 import org.globus.wsrf.annotations.StatefulResource;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
@@ -25,7 +26,7 @@ public class ResourceEndpointMapping extends AbstractActionEndpointMapping imple
     private void registerMethods(Object bean) throws Exception {
         Class beanClass = AopUtils.getTargetClass(bean);
         processClass(bean, beanClass);
-        for(Class parent: bean.getClass().getInterfaces()){
+        for (Class parent : bean.getClass().getInterfaces()) {
             processClass(bean, parent);
         }
     }
@@ -39,6 +40,13 @@ public class ResourceEndpointMapping extends AbstractActionEndpointMapping imple
             if (aa != null) {
                 URI uri = new URI(aa.value());
                 super.registerEndpoint(uri, new MethodEndpoint(bean, method));
+                return;
+            }
+            CreateResource cr = method.getAnnotation(CreateResource.class);
+            if (cr != null) {
+                URI uri = new URI(cr.value());
+                super.registerEndpoint(uri, new MethodEndpoint(bean, method));
+                return;
             }
         }
     }
