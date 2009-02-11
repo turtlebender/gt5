@@ -11,13 +11,8 @@
 
     <bean id="endpointAdapter" class="org.globus.resourceful.springws.ResourcefulEndpointFactory">
         <property name="jaxbContextPath" value="org.globus.wsrf.counter"/>
-    </bean>
-
-    <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
-        <property name="beans">
-            <map>
-        <entry key="bean:name=ResourceHome" value-ref="counterResourceStore"/>
-      </map>
+        <property name="beforeInterceptors">
+            <list/>
         </property>
     </bean>
 
@@ -25,7 +20,7 @@
 
     <bean id="starterCounter" class="com.counter.CounterResource">
         <property name="counterMap" ref="counterResourceStore"/>
-        </bean>
+    </bean>
 
     <bean id="getpp" class="org.globus.resourceful.springws.ResourceEndpointMapping">
         <property name="address" value="http://localhost:8080/CounterService"/>
