@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:count="http://counter.com/CounterService"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soapenv:Header xmlns:wsa="http://www.w3.org/2005/08/addressing">
+        <wsa:Action>http://counter.com/CounterService/create</wsa:Action>
+        <wsa:MessageID>Random</wsa:MessageID>
+        <wsa:To>http://localhost:8080/CounterService</wsa:To>
+    </soapenv:Header>
+    <soapenv:Body>
+        <count:CreateCounterRequest/>
+    </soapenv:Body>
+</soapenv:Envelope>

@@ -1,0 +1,23 @@
+<xsd:schema
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        elementFormDefault="qualified" attributeFormDefault="unqualified"
+        targetNamespace="http://counter.com/CounterService" xmlns:tns="http://counter.com/CounterService">
+
+
+    <xsd:element type="xsd:string" name="CounterId"/>
+    <xsd:element type="xsd:integer" name="count"/>
+    <xsd:element name="Counter">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:CounterId"/>
+                <xsd:element ref="tns:count"/> 
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="CreateCounterRequest">
+        <xsd:complexType/>
+    </xsd:element>
+    
+</xsd:schema>

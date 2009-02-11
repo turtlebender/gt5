@@ -1,0 +1,38 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+              http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+
+    <bean id="messageReceiver" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+        <property name="endpointAdapters" ref="endpointAdapter"/>
+        <property name="endpointMappings" ref="getpp"/>
+    </bean>
+
+    <bean id="endpointAdapter" class="org.globus.resourceful.springws.ResourcefulEndpointFactory">
+        <property name="jaxbContextPath" value="org.globus.wsrf.counter"/>
+    </bean>
+
+    <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" lazy-init="false">
+        <property name="beans">
+            <map>
+        <entry key="bean:name=ResourceHome" value-ref="counterResourceStore"/>
+      </map>
+        </property>
+    </bean>
+
+    <bean id="counterResourceStore" class="com.counter.HashMapResourceHome"/>
+
+    <bean id="starterCounter" class="com.counter.CounterResource">
+        <property name="counterMap" ref="counterResourceStore"/>
+        </bean>
+
+    <bean id="getpp" class="org.globus.resourceful.springws.ResourceEndpointMapping">
+        <property name="address" value="http://localhost:8080/CounterService"/>
+        <property name="messageSenders">
+            <bean class="org.springframework.ws.transport.http.HttpUrlConnectionMessageSender"/>
+        </property>
+    </bean>
+
+
+</beans>
