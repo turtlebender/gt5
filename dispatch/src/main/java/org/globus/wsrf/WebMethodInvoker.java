@@ -83,8 +83,10 @@ public class WebMethodInvoker {
                 params[0] = requestObject;
             }
         }
-        for (MethodInvocationInterceptor interceptor : this.interceptors) {
-            interceptor.intercept(holder, method, params);
+        if (this.interceptors != null) {
+            for (MethodInvocationInterceptor interceptor : this.interceptors) {
+                interceptor.intercept(holder, method, params);
+            }
         }
         return methodEndpoint.invoke(params);
     }
