@@ -15,5 +15,6 @@
     </parent>
     <modules>
         <module>counter</module>
+	<module>queue</module>
     </modules>    
 </project>
