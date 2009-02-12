@@ -8,6 +8,6 @@
         <wsa:To>http://localhost:8080/CounterService</wsa:To>
     </soapenv:Header>
     <soapenv:Body>
-        <count:CreateCounterRequest/>
+        <count:CreateCounterRequest>MyCounter</count:CreateCounterRequest>
     </soapenv:Body>
 </soapenv:Envelope>

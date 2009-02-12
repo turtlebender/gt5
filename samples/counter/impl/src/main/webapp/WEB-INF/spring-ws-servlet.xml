@@ -10,7 +10,7 @@
     </bean>
 
     <bean id="endpointAdapter" class="org.globus.resourceful.springws.ResourcefulEndpointFactory">
-        <property name="jaxbContextPath" value="org.globus.wsrf.counter"/>
+        <property name="jaxbContextPath" value="com.counter.counterservice"/>
         <property name="beforeInterceptors">
             <list/>
         </property>
@@ -18,7 +18,7 @@
 
     <bean id="counterResourceStore" class="com.counter.HashMapResourceHome"/>
 
-    <bean id="starterCounter" class="com.counter.CounterResource">
+    <bean id="starterCounter" class="com.counter.CounterServiceImpl">
         <property name="counterMap" ref="counterResourceStore"/>
     </bean>
 

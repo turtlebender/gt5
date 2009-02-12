@@ -16,8 +16,9 @@
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
-    <xsd:element name="CreateCounterRequest">
+    <xsd:element name="CreateCounterRequest" type="xsd:string"/>
+
+    <xsd:element name="IncrementRequest">
         <xsd:complexType/>
     </xsd:element>
-    
 </xsd:schema>
