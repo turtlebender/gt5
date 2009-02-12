@@ -1,0 +1,37 @@
+<schema
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        elementFormDefault="qualified" attributeFormDefault="unqualified"
+        targetNamespace="http://www.globus.org/QueueService" xmlns:tns="http://www.globus.org/QueueService">
+
+
+    <element type="xsd:anyType" name="QueueItem"/>
+    <element type="xsd:integer" name="QueueSize"/>
+    <element name="CreateQueueRequest" type="string"/>
+    <element name="CreateQueueResponse" type="string"/>
+    
+    <element name="PushRequest">
+        <complexType>
+            <sequence>
+                <element ref="tns:QueueItem"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="PushResponse">
+        <complexType/>
+    </element>
+
+    <element name="PopRequest">
+        <complexType/>
+    </element>
+
+    <element name="PopResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:QueueItem"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </element>
+</schema>
