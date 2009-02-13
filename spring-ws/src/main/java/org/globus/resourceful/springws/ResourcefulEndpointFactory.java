@@ -1,10 +1,15 @@
 package org.globus.resourceful.springws;
 
+import org.globus.common.MethodInvocationInterceptor;
 import org.globus.wsrf.BeanProcessor;
 import org.globus.wsrf.ProcessedResource;
 import org.globus.wsrf.ResourceDelegateFactory;
+import org.globus.wsrf.ResourcefulMethodInvoker;
 import org.globus.wsrf.WebMethodInvoker;
-import org.globus.common.MethodInvocationInterceptor;
+import org.globus.wsrf.XPathEvaluator;
+import org.globus.wsrf.lifetime.impl.AnnotatedDestroyableFactory;
+import org.globus.wsrf.lifetime.impl.AnnotatedFutureDestroyableFactory;
+import org.globus.wsrf.properties.impl.AnnotatedGetRPFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.beans.factory.FactoryBean;
@@ -13,9 +18,11 @@ import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
+import javax.xml.xpath.XPathException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 public class ResourcefulEndpointFactory implements FactoryBean, BeanPostProcessor {
     boolean resourcePopulated = false;
@@ -26,6 +33,15 @@ public class ResourcefulEndpointFactory implements FactoryBean, BeanPostProcesso
     private BeanProcessor processor = new BeanProcessor();
     private List<MethodInvocationInterceptor> beforeInterceptors;
 
+    public ResourcefulEndpointFactory() {
+        List<ResourceDelegateFactory> delegateFactories = processor.getDelegateFactories();
+        if (delegateFactories == null) {
+            delegateFactories = new ArrayList<ResourceDelegateFactory>();
+            processor.setDelegateFactories(delegateFactories);
+        }
+        addDefaultDelegateFactories(delegateFactories);
+    }
+
     public List<MethodInvocationInterceptor> getBeforeInterceptors() {
         return beforeInterceptors;
     }
@@ -35,6 +51,7 @@ public class ResourcefulEndpointFactory implements FactoryBean, BeanPostProcesso
     }
 
     public void setDelegateFactories(List<ResourceDelegateFactory> delegateFactories) {
+        addDefaultDelegateFactories(delegateFactories);
         this.processor.setDelegateFactories(delegateFactories);
     }
 
@@ -51,7 +68,7 @@ public class ResourcefulEndpointFactory implements FactoryBean, BeanPostProcesso
         this.jaxbContextPath = jaxbContextPath;
     }
 
-    private void instantiateMarshallers(String jaxbContextPath) throws Exception{
+    private void instantiateMarshallers(String jaxbContextPath) throws Exception {
         String[] pathElements = jaxbContextPath.split(":");
         Map<String, Boolean> factoryPaths = new HashMap<String, Boolean>();
         factoryPaths.put("org.oasis.wsrf.resourceproperties", false);
@@ -78,7 +95,7 @@ public class ResourcefulEndpointFactory implements FactoryBean, BeanPostProcesso
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         if (resourcePopulated) {
             return bean;
-        }        
+        }
         ProcessedResource resource;
         try {
             resource = processor.invoke(bean);
@@ -93,17 +110,32 @@ public class ResourcefulEndpointFactory implements FactoryBean, BeanPostProcesso
                 throw new FatalBeanException("Unable to create JAXB context", e);
             }
             resourcePopulated = true;
+            ResourcefulMethodInvoker rmi = new ResourcefulMethodInvoker();
+            rmi.setInterceptors(this.beforeInterceptors);
             WebMethodInvoker invoker = new WebMethodInvoker();
+            invoker.setRmi(rmi);
             invoker.setUnmarshaller(this.unmarshaller);
             invoker.setMarshaller(this.marshaller);
-            invoker.setXpression(resource.getEvaluator());
-            invoker.setInterceptors(this.beforeInterceptors);
+            XPathEvaluator evaluator = new XPathEvaluator();
+            try {
+                evaluator.setQName(resource.getQname());
+            } catch (XPathException e) {
+                throw new FatalBeanException("Unable to create XPathEvaluator", e);
+            }
+            invoker.setXpression(evaluator);
+
             adapter.setInvoker(invoker);
             adapter.setMarshaller(this.marshaller);
             adapter.setUnmarshaller(this.unmarshaller);
             return resource.getResource();
         }
         return bean;
+    }
+
+    private void addDefaultDelegateFactories(List<ResourceDelegateFactory> delegateFactories) {
+        delegateFactories.add(new AnnotatedGetRPFactory());
+        delegateFactories.add(new AnnotatedFutureDestroyableFactory());
+        delegateFactories.add(new AnnotatedDestroyableFactory());
     }
 
 

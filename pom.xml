@@ -19,6 +19,8 @@
         <module>dispatch</module>
         <module>spring-ws</module>
         <module>samples</module>
+        <module>wsrf</module>
+        <module>xml</module>
     </modules>
 
     <build>
@@ -54,7 +56,6 @@
                 <artifactId>jaxb-api</artifactId>
                 <version>2.1</version>
             </dependency>
-
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
                 <artifactId>jaxb-impl</artifactId>
@@ -80,6 +81,16 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>dispatch</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>wsrf</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>xml-dispatch</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -239,6 +250,11 @@
     </repositories>
 
     <pluginRepositories>
+        <pluginRepository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Maven 2 Repository</name>
+            <url>http://download.java.net/maven/2</url>
+        </pluginRepository>
         <pluginRepository>
             <id>Codehaus Snapshots</id>
             <url>http://snapshots.repository.codehaus.org/</url>

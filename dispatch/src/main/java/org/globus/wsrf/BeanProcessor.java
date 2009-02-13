@@ -4,10 +4,7 @@ import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import org.globus.wsrf.annotations.StatefulResource;
-import org.globus.wsrf.lifetime.impl.AnnotatedDestroyableFactory;
-import org.globus.wsrf.lifetime.impl.AnnotatedFutureDestroyableFactory;
 import org.globus.wsrf.properties.Resource;
-import org.globus.wsrf.properties.impl.AnnotatedGetRPFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -57,21 +54,19 @@ public class BeanProcessor {
     public ProcessedResource invoke(Object bean) throws Exception {
         StatefulResource sr = bean.getClass().getAnnotation(StatefulResource.class);
         if (sr != null) {
-            if (delegateFactories == null) {
-                delegateFactories = new ArrayList<ResourceDelegateFactory>();
-            }
-            addDefaultDelegateFactories(delegateFactories);
             List<Object> delegate = new ArrayList<Object>();
             List<Class> interfaces = new ArrayList<Class>();
             AnnotatedResource ar = new AnnotatedResource(bean);
             delegate.add(ar);
             interfaces.add(Resource.class);
             this.delegateInterfaces.add(Resource.class);
-            for (ResourceDelegateFactory fac : delegateFactories) {
-                if (fac.supports(bean)) {
-                    if (!delegateInterfaces.contains(fac.getInterface())) {
-                        delegate.add(fac.getDelegate(bean));
-                        interfaces.add(fac.getInterface());
+            if (delegateFactories != null) {
+                for (ResourceDelegateFactory fac : delegateFactories) {
+                    if (fac.supports(bean)) {
+                        if (!delegateInterfaces.contains(fac.getInterface())) {
+                            delegate.add(fac.getDelegate(bean));
+                            interfaces.add(fac.getInterface());
+                        }
                     }
                 }
             }
@@ -81,21 +76,10 @@ public class BeanProcessor {
             enhancer.setInterfaces(interfaces.toArray(new Class[interfaces.size()]));
             enhancer.setCallback(handler);
             Resource resource = (Resource) enhancer.create();
-            XPathEvaluator evaluator = new XPathEvaluator();
-            evaluator.setQName(resource.getResourceKeyName());
-            return new ProcessedResource(resource, evaluator);
+            return new ProcessedResource(resource, resource.getResourceKeyName());
         } else if (bean instanceof Resource) {
             Resource resource = (Resource) bean;
-            XPathEvaluator evaluator = new XPathEvaluator();
-            evaluator.setQName(resource.getResourceKeyName());
-            return new ProcessedResource(resource, evaluator);
+            return new ProcessedResource(resource, resource.getResourceKeyName());
         } else return null;
     }
-
-    private void addDefaultDelegateFactories(List<ResourceDelegateFactory> delegateFactories) {
-        delegateFactories.add(new AnnotatedGetRPFactory());
-        delegateFactories.add(new AnnotatedFutureDestroyableFactory());
-        delegateFactories.add(new AnnotatedDestroyableFactory());
-    }
-
 }

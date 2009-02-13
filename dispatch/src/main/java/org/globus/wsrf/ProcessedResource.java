@@ -2,16 +2,18 @@ package org.globus.wsrf;
 
 import org.globus.wsrf.properties.Resource;
 
+import javax.xml.namespace.QName;
+
 public class ProcessedResource {
-    Resource resource;
-    XPathEvaluator evaluator;
+    private Resource resource;
+    private QName qname;
 
     public ProcessedResource() {
     }
 
-    public ProcessedResource(Resource resource, XPathEvaluator evaluator) {
+    public ProcessedResource(Resource resource, QName qname) {
         this.resource = resource;
-        this.evaluator = evaluator;
+        this.qname = qname;
     }
 
     public Resource getResource() {
@@ -22,11 +24,11 @@ public class ProcessedResource {
         this.resource = resource;
     }
 
-    public XPathEvaluator getEvaluator() {
-        return evaluator;
+    public QName getQname() {
+        return qname;
     }
 
-    public void setEvaluator(XPathEvaluator evaluator) {
-        this.evaluator = evaluator;
+    public void setQname(QName qname) {
+        this.qname = qname;
     }
 }

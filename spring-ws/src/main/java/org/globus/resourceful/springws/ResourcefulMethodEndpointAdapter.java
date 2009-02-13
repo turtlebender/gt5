@@ -1,5 +1,6 @@
 package org.globus.resourceful.springws;
 
+import org.globus.wsrf.WebMethodInvoker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ws.WebServiceMessage;
@@ -8,10 +9,10 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.support.MarshallingUtils;
-import org.globus.wsrf.WebMethodInvoker;
 
 import javax.xml.transform.Source;
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 
 public class ResourcefulMethodEndpointAdapter extends GenericMarshallingMethodEndpointAdapter {
@@ -31,7 +32,9 @@ public class ResourcefulMethodEndpointAdapter extends GenericMarshallingMethodEn
             SoapMessage request = (SoapMessage) messageContext.getRequest();
             Object requestObject = unmarshalRequest(request);
             Source headerSource = request.getSoapHeader().getSource();
-            Object responseObject = invoker.invoke(methodEndpoint, requestObject, headerSource,
+            Method method = methodEndpoint.getMethod();
+            Object target = methodEndpoint.getBean();
+            Object responseObject = invoker.invoke(method, target, requestObject, headerSource,
                     new SpringWSPropertyHolder(messageContext));
             if (responseObject != null) {
                 WebServiceMessage response = messageContext.getResponse();
@@ -55,6 +58,6 @@ public class ResourcefulMethodEndpointAdapter extends GenericMarshallingMethodEn
     }
 
     protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
-        return invoker.supports(methodEndpoint);
+        return invoker.supports(methodEndpoint.getMethod());
     }
 }

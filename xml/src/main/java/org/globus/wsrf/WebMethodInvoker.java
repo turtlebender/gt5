@@ -1,36 +1,31 @@
 package org.globus.wsrf;
 
-import org.globus.common.MethodInvocationInterceptor;
 import org.globus.common.PropertyHolder;
 import org.springframework.oxm.GenericMarshaller;
 import org.springframework.oxm.GenericUnmarshaller;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
-import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.w3c.dom.Node;
 
-import javax.xml.bind.JAXBElement;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.List;
 
 public class WebMethodInvoker {
 
     private XPathEvaluator xpression;
     private Unmarshaller unmarshaller;
     private Marshaller marshaller;
-    private List<MethodInvocationInterceptor> interceptors;
+    private ResourcefulMethodInvoker rmi;
 
-
-    public List<MethodInvocationInterceptor> getInterceptors() {
-        return interceptors;
+    public ResourcefulMethodInvoker getRmi() {
+        return rmi;
     }
 
-    public void setInterceptors(List<MethodInvocationInterceptor> interceptors) {
-        this.interceptors = interceptors;
+    public void setRmi(ResourcefulMethodInvoker rmi) {
+        this.rmi = rmi;
     }
 
     public Marshaller getMarshaller() {
@@ -57,63 +52,22 @@ public class WebMethodInvoker {
         this.xpression = xpression;
     }
 
-    public Object invoke(MethodEndpoint methodEndpoint, Object requestObject, Source headerSource,
+    public Object invoke(Method method, Object target, Object requestObject, Source headerSource,
                          PropertyHolder holder) throws Exception {
-        Method method = methodEndpoint.getMethod();
-        int numParams = method.getParameterTypes().length;
-        Object[] params = new Object[numParams];
-        if (params.length > 1) {
-            int resourceIndex = getResourcefulIndex(method);
-            switch (resourceIndex) {
-                case 0:
-                    params[0] = getResourceKey(headerSource);
-                    params[1] = requestObject;
-                    break;
-                case 1:
-                    params[0] = requestObject;
-                    params[1] = getResourceKey(headerSource);
-                    break;
-
-            }
-        } else if (params.length == 1) {
-            int resourceIndex = getResourcefulIndex(method);
-            if (resourceIndex == 0) {
-                params[0] = getResourceKey(headerSource);
-            } else {
-                params[0] = requestObject;
-            }
-        }
-        if (this.interceptors != null) {
-            for (MethodInvocationInterceptor interceptor : this.interceptors) {
-                interceptor.intercept(holder, method, params);
-            }
-        }
-        return methodEndpoint.invoke(params);
-    }
-
-    private int getResourcefulIndex(Method method) {
-        Annotation[][] annotations = method.getParameterAnnotations();
-        for (int i = 0; i < method.getParameterTypes().length; i++) {
-            for (Annotation annotation : annotations[i]) {
-                if (annotation instanceof Resourceful) {
-                    return i;
-                }
-            }
-        }
-        return -1;
+        Object resourceKey = getResourceKey(headerSource);
+        return rmi.invokeMethod(new InvokeMethodRequest(target, requestObject, holder, resourceKey, method));
     }
 
     private Object getResourceKey(Source headerSource) throws Exception {
         Node results = this.xpression.evaluate(headerSource);
-        Object key = unmarshaller.unmarshal(new DOMSource(results));
-        if (key instanceof JAXBElement) {
-            key = ((JAXBElement) key).getValue();
+        if (results != null) {
+            return unmarshaller.unmarshal(new DOMSource(results));
+        } else {
+            return null;
         }
-        return key;
     }
 
-    public boolean supports(MethodEndpoint methodEndpoint) {
-        Method method = methodEndpoint.getMethod();
+    public boolean supports(Method method) {
         return supportsReturnType(method) && supportsParameters(method);
     }
 
