@@ -7,8 +7,8 @@
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>spring-ws</servlet-name>
-        <url-pattern>/queue</url-pattern>
+        <servlet-name>queues</servlet-name>
+        <url-pattern>/queues</url-pattern>
     </servlet-mapping>
 
 </web-app>

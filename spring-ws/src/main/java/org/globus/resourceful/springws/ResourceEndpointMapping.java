@@ -3,6 +3,8 @@ package org.globus.resourceful.springws;
 import org.globus.wsrf.annotations.AddressingAction;
 import org.globus.wsrf.annotations.CreateResource;
 import org.globus.wsrf.annotations.StatefulResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
@@ -18,6 +20,7 @@ import java.net.URISyntaxException;
 
 public class ResourceEndpointMapping extends AbstractActionEndpointMapping implements BeanPostProcessor {
     private URI address;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         return bean;
@@ -39,14 +42,14 @@ public class ResourceEndpointMapping extends AbstractActionEndpointMapping imple
             AddressingAction aa = method.getAnnotation(AddressingAction.class);
             if (aa != null) {
                 URI uri = new URI(aa.value());
-                super.registerEndpoint(uri, new MethodEndpoint(bean, method));
-                return;
+                logger.debug("Registering action {} to {}", uri, method);
+                super.registerEndpoint(uri, new MethodEndpoint(bean, method));                
             }
             CreateResource cr = method.getAnnotation(CreateResource.class);
             if (cr != null) {
                 URI uri = new URI(cr.value());
+                logger.debug("Registering creator action {} to {}", uri, method);
                 super.registerEndpoint(uri, new MethodEndpoint(bean, method));
-                return;
             }
         }
     }
