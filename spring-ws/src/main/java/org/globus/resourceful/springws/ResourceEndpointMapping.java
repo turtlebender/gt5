@@ -2,13 +2,9 @@ package org.globus.resourceful.springws;
 
 import org.globus.wsrf.annotations.AddressingAction;
 import org.globus.wsrf.annotations.CreateResource;
-import org.globus.wsrf.annotations.StatefulResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.FatalBeanException;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.JdkVersion;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.soap.addressing.server.AbstractActionEndpointMapping;
@@ -18,12 +14,17 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 
-public class ResourceEndpointMapping extends AbstractActionEndpointMapping implements BeanPostProcessor {
+public class ResourceEndpointMapping extends AbstractActionEndpointMapping {
     private URI address;
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        return bean;
+    public void setTarget(Object bean) throws Exception {
+        registerMethods(bean);
+    }
+
+    @Override
+    protected Object lookupEndpoint(URI action) {
+        return super.lookupEndpoint(action);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     private void registerMethods(Object bean) throws Exception {
@@ -35,36 +36,26 @@ public class ResourceEndpointMapping extends AbstractActionEndpointMapping imple
     }
 
     private void processClass(Object bean, Class beanClass) throws URISyntaxException {
-        for (Method method : beanClass.getDeclaredMethods()) {
+        Method[] methods = beanClass.getDeclaredMethods();
+        for (Method method : methods) {
             if (JdkVersion.isAtLeastJava15() && method.isSynthetic() || method.getDeclaringClass().equals(Object.class)) {
                 continue;
             }
             AddressingAction aa = method.getAnnotation(AddressingAction.class);
             if (aa != null) {
                 URI uri = new URI(aa.value());
-                logger.debug("Registering action {} to {}", uri, method);
-                super.registerEndpoint(uri, new MethodEndpoint(bean, method));                
+//                logger.debug("Registering action {} to {}", uri, method);
+                if (this.lookupEndpoint(uri) == null)
+                    super.registerEndpoint(uri, new MethodEndpoint(bean, method));
             }
             CreateResource cr = method.getAnnotation(CreateResource.class);
             if (cr != null) {
                 URI uri = new URI(cr.value());
-                logger.debug("Registering creator action {} to {}", uri, method);
-                super.registerEndpoint(uri, new MethodEndpoint(bean, method));
+//                logger.debug("Registering creator action {} to {}", uri, method);
+                if (this.lookupEndpoint(uri) == null)
+                    super.registerEndpoint(uri, new MethodEndpoint(bean, method));
             }
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        Class targetClass = AopUtils.getTargetClass(bean);
-        if (targetClass.getAnnotation(StatefulResource.class) != null) {
-            try {
-                registerMethods(bean);
-            } catch (Exception e) {
-                throw new FatalBeanException("Error registering action methods", e);
-            }
-        }
-        return bean;
     }
 
     protected URI getEndpointAddress(Object o) {

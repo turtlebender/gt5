@@ -4,12 +4,33 @@
 
     <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
 
-    <bean id="messageReceiver" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
-        <property name="endpointAdapters" ref="endpointAdapter"/>
-        <property name="endpointMappings" ref="getpp"/>
-    </bean>
+    <!--<bean id="md" class="org.springframework.ws.soap.server.SoapMessageDispatcher"/>-->
 
-    <bean id="endpointAdapter" class="org.globus.resourceful.springws.ResourcefulEndpointFactory">
+    <!--<bean id="invoker" class="org.globus.wsrf.WebMethodInvoker">-->
+    <!--<property name="rmi">-->
+    <!--<bean class="org.globus.wsrf.ResourcefulMethodInvoker"/>-->
+    <!--</property>-->
+    <!--<property name="marshaller" ref="marshaller"/>-->
+    <!--<property name="unmarshaller" ref="marshaller"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">-->
+    <!--<property name="contextPath" value="org.globus.queueservice:org.oasis.wsrf.resourceproperties"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="adapter" class="org.globus.resourceful.springws.ResourcefulMethodEndpointAdapter">-->
+    <!--<property name="invoker" ref="invoker"/>-->
+    <!--<property name="marshaller" ref="marshaller"/>-->
+    <!--<property name="unmarshaller" ref="marshaller"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="mapper" class="org.globus.resourceful.springws.ResourceEndpointMapping">-->
+    <!--<property name="address" value="http://localhost:8080/queue/queues"/>-->
+    <!--<property name="target" ref="queueService"/>-->
+    <!--</bean>-->
+    <bean id="messageReceiver" class="org.globus.resourceful.springws.ResourcefulEndpointFactory">
+        <property name="address" value="http://localhost:8080/queue/queues"/>
+        <property name="serviceObject" ref="queueService"/>
         <property name="jaxbContextPath" value="org.globus.queueservice"/>
         <property name="beforeInterceptors">
             <list/>
@@ -17,13 +38,4 @@
     </bean>
 
     <bean id="queueService" class="org.globus.queue.DefaultQueueService"/>
-
-    <bean id="getpp" class="org.globus.resourceful.springws.ResourceEndpointMapping">
-        <property name="address" value="http://localhost:8080/queues"/>
-        <property name="messageSenders">
-            <bean class="org.springframework.ws.transport.http.HttpUrlConnectionMessageSender"/>
-        </property>
-    </bean>
-
-
 </beans>

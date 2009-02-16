@@ -4,12 +4,10 @@
 
     <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
 
-    <bean id="messageReceiver" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
-        <property name="endpointAdapters" ref="endpointAdapter"/>
-        <property name="endpointMappings" ref="getpp"/>
-    </bean>
-
-    <bean id="endpointAdapter" class="org.globus.resourceful.springws.ResourcefulEndpointFactory">
+    <bean id="messageDispatcher" class="org.globus.resourceful.springws.ResourcefulEndpointFactory">
+        <property name="serviceObject" ref="starterCounter"/>
+        <property name="address" value="http://localhost:8080/CounterService"/>
+        <property name="name" value="counterService"/>
         <property name="jaxbContextPath" value="com.counter.counterservice"/>
         <property name="beforeInterceptors">
             <list/>
@@ -21,13 +19,4 @@
     <bean id="starterCounter" class="com.counter.CounterServiceImpl">
         <property name="counterMap" ref="counterResourceStore"/>
     </bean>
-
-    <bean id="getpp" class="org.globus.resourceful.springws.ResourceEndpointMapping">
-        <property name="address" value="http://localhost:8080/CounterService"/>
-        <property name="messageSenders">
-            <bean class="org.springframework.ws.transport.http.HttpUrlConnectionMessageSender"/>
-        </property>
-    </bean>
-
-
 </beans>

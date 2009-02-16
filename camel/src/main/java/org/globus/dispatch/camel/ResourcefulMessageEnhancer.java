@@ -5,7 +5,6 @@ import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.globus.common.PropertyHolder;
 import org.globus.wsrf.InvokeMethodRequest;
-import org.globus.wsrf.ResourcefulMethodInvoker;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,14 +12,9 @@ import java.util.Map;
 
 public class ResourcefulMessageEnhancer implements Processor {
     private Map<String, CamelMethodEndpoint> endpointMap = new HashMap<String, CamelMethodEndpoint>();
-    ResourcefulMethodInvoker invoker;
-
-    public ResourcefulMethodInvoker getInvoker() {
-        return invoker;
-    }
-
-    public void setInvoker(ResourcefulMethodInvoker invoker) {
-        this.invoker = invoker;
+    
+    public void registerEndpoint(String address, CamelMethodEndpoint endpoint){
+        endpointMap.put(address, endpoint);
     }
 
     public void process(Exchange exchange) throws Exception {

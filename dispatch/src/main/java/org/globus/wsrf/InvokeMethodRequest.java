@@ -11,7 +11,8 @@ public class InvokeMethodRequest {
     private final Object resourceKey;
     private final Method method;
 
-    public InvokeMethodRequest(Object target, Object requestObject, PropertyHolder holder, Object resourceKey, Method method) {
+    public InvokeMethodRequest(Object target, Object requestObject, PropertyHolder holder, Object resourceKey,
+                               Method method) {
         this.target = target;
         this.requestObject = requestObject;
         this.holder = holder;

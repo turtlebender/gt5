@@ -21,6 +21,7 @@
         <module>samples</module>
         <module>wsrf</module>
         <module>xml</module>
+        <module>camel</module>
     </modules>
 
     <build>
@@ -55,6 +56,12 @@
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
                 <version>2.1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.activation</groupId>
+                        <artifactId>activation</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.sun.xml.bind</groupId>
@@ -177,7 +184,12 @@
                 <groupId>javax.xml.soap</groupId>
                 <artifactId>saaj-api</artifactId>
                 <version>${saaj.version}</version>
-                <scope>runtime</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.activation</groupId>
+                        <artifactId>activation</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.sun.xml.messaging.saaj</groupId>
