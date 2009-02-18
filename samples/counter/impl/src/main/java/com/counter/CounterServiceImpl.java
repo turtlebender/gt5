@@ -55,7 +55,7 @@ public class CounterServiceImpl implements InitializingBean, CounterService {
         return fac.createCounterId(id);
     }
 
-    @AddressingAction("http://counter.com/CounterService/increment")
+    @AddressingAction(namespace="http://counter.com/", path="CounterService/increment")
     public JAXBElement<BigInteger> increment(@Resourceful String counterId, IncrementRequest request) {
         BigInteger count = counterMap.findResource(counterId);
         count = BigInteger.valueOf(count.intValue() + 1);

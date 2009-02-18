@@ -7,6 +7,7 @@ import org.oasis.wsrf.lifetime.SetTerminationTimeResponse;
 
 
 public interface FutureDestroyable {
-    @AddressingAction("http://docs.oasis-open.org/wsrf/rlw-2/ScheduledResourceTermination/SetTerminationTimeRequest")
+    @AddressingAction(namespace="http://docs.oasis-open.org/wsrf/rlw-2/ScheduledResourceTermination/",
+            path="SetTerminationTimeRequest")
     public SetTerminationTimeResponse setTerminationTime(@Resourceful Object resourceKey, SetTerminationTime time) throws Exception;
 }

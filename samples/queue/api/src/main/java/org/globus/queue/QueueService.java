@@ -21,11 +21,11 @@ public interface QueueService {
     @GetResourceProperty(namespace = "http://www.globus/queue", localPart = "size")
     JAXBElement<BigInteger> getQueueSize(@Resourceful String queueId);
 
-    @AddressingAction("http://www.globus.org/queue/push")
+    @AddressingAction(namespace="http://www.globus.org", path="queue/push")
     @SuppressWarnings("unchecked")
     PushResponse push(@Resourceful String queueId, PushRequest request);
 
-    @AddressingAction("http://www.globus.org/queue/pop")
+    @AddressingAction(namespace="http://www.globus.org/", path="queue/pop")
     PopResponse pop(@Resourceful String queueId, PopRequest request);
 
     @CreateResource("http://www.globus.org/queue/create")

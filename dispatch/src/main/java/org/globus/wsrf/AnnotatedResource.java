@@ -5,13 +5,6 @@ import org.globus.wsrf.properties.Resource;
 
 import javax.xml.namespace.QName;
 
-/**
- * Created by IntelliJ IDEA.
- * User: turtlebender
- * Date: Feb 6, 2009
- * Time: 9:23:40 AM
- * To change this template use File | Settings | File Templates.
- */
 public class AnnotatedResource implements Resource {
     QName keyName;
 

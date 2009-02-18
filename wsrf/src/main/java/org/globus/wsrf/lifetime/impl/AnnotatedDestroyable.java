@@ -40,7 +40,8 @@ public class AnnotatedDestroyable implements Destroyable {
         }
     }
 
-    @AddressingAction("http://docs.oasis-open.org/wsrf/rlw-2/ImmediateResourceTermination/DestroyRequest")
+    @AddressingAction(namespace="http://docs.oasis-open.org/wsrf/rlw-2/ImmediateResourceTermination/",
+            path="DestroyRequest")
     public DestroyResponse destroy(@Resourceful Object id) throws Exception {
         if (destroyMethod == null) {
             throw new IllegalArgumentException("Unable to dispatch terminate method");

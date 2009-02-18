@@ -26,8 +26,9 @@ public class AnnotatedFutureDestroyable implements FutureDestroyable {
     public AnnotatedFutureDestroyable() {
     }
 
-    public AnnotatedFutureDestroyable(Object resource) {
+    public AnnotatedFutureDestroyable(Object resource, ScheduledExecutorService schedule) {
         this.resource = resource;
+        this.schedule = schedule;
     }
 
     public ScheduledExecutorService getSchedule() {
@@ -50,6 +51,9 @@ public class AnnotatedFutureDestroyable implements FutureDestroyable {
         if (resource == null) {
             throw new IllegalArgumentException("You must specify the ResourceClass");
         }
+        if(schedule == null){
+            throw new IllegalArgumentException("You must specify the ScheduledExecutorService");
+        }
 
         for (Method method : resource.getClass().getMethods()) {
             if (method.getAnnotation(TerminateResource.class) != null) {
@@ -59,7 +63,8 @@ public class AnnotatedFutureDestroyable implements FutureDestroyable {
         }
     }
 
-    @AddressingAction("http://docs.oasis-open.org/wsrf/rlw-2/ScheduledResourceTermination/SetTerminationTimeRequest")
+    @AddressingAction(namespace="http://docs.oasis-open.org/wsrf/rlw-2/ScheduledResourceTermination/",
+            path="SetTerminationTimeRequest")
     public SetTerminationTimeResponse setTerminationTime(final @Resourceful Object id, SetTerminationTime termTime) {
         long executeTime = 0;
         if (termTime.getRequestedLifetimeDuration() != null) {
@@ -75,6 +80,7 @@ public class AnnotatedFutureDestroyable implements FutureDestroyable {
             }
             future.cancel(true);
             futureMap.remove(id);
+            return new SetTerminationTimeResponse();
         }
         Callable<Object> terminate = new TerminateCallable(resource, id);
         Future<Object> futureResult = schedule.schedule(terminate, executeTime, TimeUnit.MILLISECONDS);

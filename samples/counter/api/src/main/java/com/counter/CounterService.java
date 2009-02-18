@@ -1,12 +1,11 @@
 package com.counter;
 
-import org.globus.wsrf.annotations.AddressingAction;
+import com.counter.counterservice.IncrementRequest;
 import org.globus.wsrf.Resourceful;
+import org.globus.wsrf.annotations.AddressingAction;
 
 import javax.xml.bind.JAXBElement;
 import java.math.BigInteger;
-
-import com.counter.counterservice.IncrementRequest;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,6 +15,6 @@ import com.counter.counterservice.IncrementRequest;
  * To change this template use File | Settings | File Templates.
  */
 public interface CounterService {
-    @AddressingAction("http://counter.com/CounterService/increment")
+    @AddressingAction(namespace="http://counter.com/", path="CounterService/increment")
     JAXBElement<BigInteger> increment(@Resourceful String counterId, IncrementRequest request);
 }

@@ -6,13 +6,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 
-/**
- * Created by IntelliJ IDEA.
- * User: turtlebender
- * Date: Feb 12, 2009
- * Time: 8:46:34 PM
- * To change this template use File | Settings | File Templates.
- */
 public class ResourcefulMethodInvoker {
 
     private List<MethodInvocationInterceptor> interceptors;
@@ -27,7 +20,7 @@ public class ResourcefulMethodInvoker {
     }
 
 
-    private int getResourcefulIndex(Method method) {
+    protected int getResourcefulIndex(Method method) {
         Annotation[][] annotations = method.getParameterAnnotations();
         for (int i = 0; i < method.getParameterTypes().length; i++) {
             for (Annotation annotation : annotations[i]) {
@@ -43,31 +36,42 @@ public class ResourcefulMethodInvoker {
         int numParams = invokeMethodRequest.getMethod().getParameterTypes().length;
         Object[] params = new Object[numParams];
         if (params.length > 1) {
-            int resourceIndex = getResourcefulIndex(invokeMethodRequest.getMethod());
-            switch (resourceIndex) {
-                case 0:
-                    params[0] = invokeMethodRequest.getResourceKey();
-                    params[1] = invokeMethodRequest.getRequestObject();
-                    break;
-                case 1:
-                    params[0] = invokeMethodRequest.getRequestObject();
-                    params[1] = invokeMethodRequest.getResourceKey();
-                    break;
-
-            }
+            invokeMultipleArgs(invokeMethodRequest, params);
         } else if (params.length == 1) {
-            int resourceIndex = getResourcefulIndex(invokeMethodRequest.getMethod());
-            if (resourceIndex == 0) {
-                params[0] = invokeMethodRequest.getResourceKey();
-            } else {
-                params[0] = invokeMethodRequest.getRequestObject();
-            }
+            invokeSingleArg(invokeMethodRequest, params);
         }
+        addInterceptors(invokeMethodRequest, params);
+        return invokeMethodRequest.getMethod().invoke(invokeMethodRequest.getTarget(), params);
+    }
+
+    private void addInterceptors(InvokeMethodRequest invokeMethodRequest, Object[] params) {
         if (this.interceptors != null) {
             for (MethodInvocationInterceptor interceptor : this.interceptors) {
                 interceptor.intercept(invokeMethodRequest.getHolder(), invokeMethodRequest.getMethod(), params);
             }
         }
-        return invokeMethodRequest.getMethod().invoke(invokeMethodRequest.getTarget(), params);
-    }    
+    }
+
+    private void invokeSingleArg(InvokeMethodRequest invokeMethodRequest, Object[] params) {
+        int resourceIndex = getResourcefulIndex(invokeMethodRequest.getMethod());
+        if (resourceIndex == 0) {
+            params[0] = invokeMethodRequest.getResourceKey();
+        } else {
+            params[0] = invokeMethodRequest.getRequestObject();
+        }
+    }
+
+    private void invokeMultipleArgs(InvokeMethodRequest invokeMethodRequest, Object[] params) {
+        int resourceIndex = getResourcefulIndex(invokeMethodRequest.getMethod());
+        switch (resourceIndex) {
+            case 0:
+                params[0] = invokeMethodRequest.getResourceKey();
+                params[1] = invokeMethodRequest.getRequestObject();
+                break;
+            case 1:
+                params[0] = invokeMethodRequest.getRequestObject();
+                params[1] = invokeMethodRequest.getResourceKey();
+                break;
+        }
+    }
 }

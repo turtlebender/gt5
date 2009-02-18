@@ -1,0 +1,11 @@
+<schema
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        elementFormDefault="qualified" attributeFormDefault="unqualified"
+        targetNamespace="http://www.test.com" xmlns:tns="http://www.test.com">
+
+
+    <element name="TestRequest" type="string"/>
+    <element name="TestResponse" type="string"/>
+</schema>

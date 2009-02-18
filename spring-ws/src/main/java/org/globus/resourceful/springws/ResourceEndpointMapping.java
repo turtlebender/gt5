@@ -43,15 +43,13 @@ public class ResourceEndpointMapping extends AbstractActionEndpointMapping {
             }
             AddressingAction aa = method.getAnnotation(AddressingAction.class);
             if (aa != null) {
-                URI uri = new URI(aa.value());
-//                logger.debug("Registering action {} to {}", uri, method);
+                URI uri = new URI(aa.namespace() + aa.path());
                 if (this.lookupEndpoint(uri) == null)
                     super.registerEndpoint(uri, new MethodEndpoint(bean, method));
             }
             CreateResource cr = method.getAnnotation(CreateResource.class);
             if (cr != null) {
                 URI uri = new URI(cr.value());
-//                logger.debug("Registering creator action {} to {}", uri, method);
                 if (this.lookupEndpoint(uri) == null)
                     super.registerEndpoint(uri, new MethodEndpoint(bean, method));
             }

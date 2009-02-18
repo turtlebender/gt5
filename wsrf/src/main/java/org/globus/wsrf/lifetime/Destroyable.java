@@ -6,6 +6,7 @@ import org.oasis.wsrf.lifetime.DestroyResponse;
 
 
 public interface Destroyable {
-    @AddressingAction("http://docs.oasis-open.org/wsrf/rlw-2/ImmediateResourceTermination/DestroyRequest")
+    @AddressingAction(namespace="http://docs.oasis-open.org/wsrf/rlw-2/ImmediateResourceTermination/",
+            path="DestroyRequest")
     public DestroyResponse destroy(@Resourceful Object id) throws Exception;
 }

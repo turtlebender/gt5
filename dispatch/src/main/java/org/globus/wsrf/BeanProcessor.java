@@ -63,9 +63,10 @@ public class BeanProcessor {
             if (delegateFactories != null) {
                 for (ResourceDelegateFactory fac : delegateFactories) {
                     if (fac.supports(bean)) {
-                        if (!delegateInterfaces.contains(fac.getInterface())) {
+                        Class delegateInterface = fac.getInterface();
+                        if (!delegateInterfaces.contains(delegateInterface)) {
                             delegate.add(fac.getDelegate(bean));
-                            interfaces.add(fac.getInterface());
+                            interfaces.add(delegateInterface);
                         }
                     }
                 }
@@ -76,9 +77,6 @@ public class BeanProcessor {
             enhancer.setInterfaces(interfaces.toArray(new Class[interfaces.size()]));
             enhancer.setCallback(handler);
             Resource resource = (Resource) enhancer.create();
-            return new ProcessedResource(resource, resource.getResourceKeyName());
-        } else if (bean instanceof Resource) {
-            Resource resource = (Resource) bean;
             return new ProcessedResource(resource, resource.getResourceKeyName());
         } else return null;
     }

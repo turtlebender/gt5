@@ -30,7 +30,7 @@ public class DefaultQueueService<T> implements QueueService {
         return fac.createQueueSize(BigInteger.valueOf(queue.size()));
     }
 
-    @AddressingAction("http://www.globus.org/queue/push")
+    @AddressingAction(namespace="http://www.globus.org/", path="queue/push")
     @SuppressWarnings("unchecked")
     public PushResponse push(@Resourceful String queueId, PushRequest request) {
         Queue<T> queue = queueMap.get(queueId);
@@ -38,7 +38,7 @@ public class DefaultQueueService<T> implements QueueService {
         return fac.createPushResponse();
     }
 
-    @AddressingAction("http://www.globus.org/queue/pop")
+    @AddressingAction(namespace="http://www.globus.org/", path="queue/pop")
     public PopResponse pop(@Resourceful String queueId, PopRequest request) {
         Queue<T> queue = queueMap.get(queueId);
         Object o = queue.remove();

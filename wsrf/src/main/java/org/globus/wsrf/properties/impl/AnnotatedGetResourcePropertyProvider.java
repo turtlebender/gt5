@@ -1,10 +1,12 @@
 package org.globus.wsrf.properties.impl;
 
+import org.globus.wsrf.ResourceException;
 import org.globus.wsrf.Resourceful;
 import org.globus.wsrf.annotations.AddressingAction;
 import org.globus.wsrf.annotations.GetResourceProperty;
 import org.globus.wsrf.annotations.StatefulResource;
 import org.globus.wsrf.properties.GetResourcePropertyProvider;
+import org.globus.wsrf.properties.UnknownResourcePropertyException;
 import org.oasis.wsrf.resourceproperties.GetResourcePropertyResponse;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -16,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AnnotatedGetResourcePropertyProvider implements GetResourcePropertyProvider, InitializingBean {
-    private Map<QName, Method> methodMap;
+    private Map<QName, Method> methodMap = new HashMap<QName, Method>();
     private Object resource;
 
     public AnnotatedGetResourcePropertyProvider() {
@@ -39,7 +41,6 @@ public class AnnotatedGetResourcePropertyProvider implements GetResourceProperty
         if (resource == null) {
             throw new IllegalArgumentException("You must specify the ResourceClass");
         }
-        methodMap = new HashMap<QName, Method>();
         for (Method method : resource.getClass().getMethods()) {
             GetResourceProperty prop = method.getAnnotation(GetResourceProperty.class);
             if (prop != null) {
@@ -53,20 +54,26 @@ public class AnnotatedGetResourcePropertyProvider implements GetResourceProperty
         }
     }
 
-    @AddressingAction("http://docs.open-oasis.org/wsrf/rpw-2/GetResourceProperty/GetResourcePropertyRequest")
+    @AddressingAction(namespace = "http://docs.open-oasis.org/wsrf/rpw-2/GetResourceProperty/",
+            path = "GetResourcePropertyRequest")
     @SuppressWarnings("unchecked")
     public GetResourcePropertyResponse getResourceProperty(@Resourceful Object resourceKey, JAXBElement<QName> resourceProperty)
-            throws Exception {
+            throws ResourceException {
         QName propName = resourceProperty.getValue();
-        Method method = methodMap.get(propName);
-        if (method == null) {
-            throw new IllegalArgumentException("Unknown Property Name: " + propName);
-        }
         if (resource == null) {
             throw new IllegalArgumentException("Resource must be specified");
         }
+        Method method = methodMap.get(propName);
+        if (method == null) {
+            throw new UnknownResourcePropertyException("Unknown Property Name: " + propName);
+        }
         try {
-            Object result = method.invoke(resource, resourceKey);
+            Object result;
+            if (method.getParameterTypes().length == 0) {
+                result = method.invoke(resource);
+            } else {
+                result = method.invoke(resource, resourceKey);
+            }
             JAXBElement element = new JAXBElement(propName, result.getClass(), result);
             GetResourcePropertyResponse response = new GetResourcePropertyResponse();
             response.getAny().add(element);

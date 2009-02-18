@@ -30,5 +30,11 @@
             <scope>test</scope>
             <classifier>jdk15</classifier>
         </dependency>
+        <dependency>
+            <groupId>org.jmock</groupId>
+            <artifactId>jmock</artifactId>
+            <version>2.5.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

@@ -10,5 +10,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Inherited
 public @interface AddressingAction {
-    String value();
+    String namespace();
+    String path();
 }
